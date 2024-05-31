@@ -42,16 +42,15 @@ def clean_text(text):
 
 def generate_ngrams(text, n):
     """
-    Generer les ngrams d'un text donné en parametre
+    Générer les n-grams d'un texte donné en paramètre .
     """
     tokens = word_tokenize(text)
-    tokens = [word for word in tokens if word not in stopwords.words('english')]
     return list(ngrams(tokens, n))
 
 
 def generate_ngrams_no_stopwords(text, n):
     """
-    Generer les n-grams d'un text donné en parametre mais sans stopwords
+    Generer les n-grams d'un text donné en parametre en elimnant les stopswords.
     """
     stop_words = set(stopwords.words('french'))
     tokens = word_tokenize(text)
@@ -59,11 +58,15 @@ def generate_ngrams_no_stopwords(text, n):
     return list(ngrams(tokens, n))
 
 
-def analyze_ngrams_frequencies(text, n):
+def analyze_ngrams_frequencies(n):
     """
     Analyser la fréquence des n-grams et identifier les plus fréquents.
+
     """
-    n_grams = generate_ngrams(text, n)
+    df = pd.read_csv("data.csv")
+    df['texte'] = df['texte'].apply(clean_text)
+    text_data = ' '.join(df['texte'])
+    n_grams = generate_ngrams(text_data, n)
     return Counter(n_grams)
 
 
@@ -93,21 +96,6 @@ def get_credentials():
         with open("token.json", "w") as token:
             token.write(credentials.to_json())
     return credentials
-
-
-def get_data():
-    """
-    Récupérer les données de Google Sheets.
-    """
-    credentials = get_credentials()
-    try:
-        service = build('sheets', 'v4', credentials=credentials)
-        sheet = service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=SPREADSHEET_ID, range="sheet1").execute()
-        return result.get("values", [])
-    except HttpError as error:
-        print(error)
-        return None
 
 
 def insert_data(df):
@@ -145,8 +133,6 @@ def insert_data(df):
 def main():
     df = pd.read_csv("data.csv")
     df['texte'] = df['texte'].apply(clean_text)
-
-    # Effectuer l'analyse n-gram
     text_data = ' '.join(df['texte'])
     n_grams_freq = analyze_ngrams_frequencies(text_data, 1)  # Exemple pour les bigrams
     insights = document_insights(n_grams_freq)
@@ -155,12 +141,9 @@ def main():
     # Insérer les données dans Google Sheets
     insert_data(df)
 
-    # Obtenir les données de Google Sheets et les afficher
-    data = get_data()
-    if data:
-        for row in data:
-            print(row)
-
 
 if __name__ == '__main__':
     main()
+    # les questions : 1-on utilise les stopswords ou non. 2-structurations du code (fonction main) 3-documentations
+    # des insights . 4-README
+

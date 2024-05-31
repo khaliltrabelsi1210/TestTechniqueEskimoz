@@ -1,7 +1,7 @@
 pandas~=2.2.2
 numpy
+google
 google-auth-oauthlib
 google-auth-httplib2
 google-api-python-client
-googleapiclient
 nltk~=3.8.1
