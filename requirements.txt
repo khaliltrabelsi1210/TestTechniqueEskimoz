@@ -1,7 +1,12 @@
-pandas~=2.2.2
+pandas==2.2.2
 numpy
-google
+google-api-python-client==2.22.0
 google-auth-oauthlib
 google-auth-httplib2
-google-api-python-client
-nltk~=3.8.1
+nltk==3.8.1
+streamlit==1.35.0
+spacy==3.7.4
+fr-core-news-sm @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_sm-3.0.0/fr_core_news_sm-3.0.0.tar.gz
+plotly==5.22.0
+matplotlib==3.9.0
+wordcloud==1.9.3
